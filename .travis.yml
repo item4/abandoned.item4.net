@@ -1,0 +1,17 @@
+language: python
+python: 3.6
+sudo: false
+cache:
+  directories:
+  - .mypy_cache
+  - $HOME/.cache/pip
+install:
+- pip install --upgrade pip setuptools wheel
+- pip install --upgrade -e .[tests,lint]
+script:
+- pytest tests
+- flake8
+- mypy innocent api tests
+notifications:
+  slack:
+    secure: TqCjNHqDPUtKSzu9IQ1Z/4300O0UBqj87Jpb3/wA9fHNKGL9hASNkbE4AJNKJl7/Q1DIe56xZimnxd92LANL2Z1E2gLpHbPLh8L4uyhzCpRq0LZojPOfHMSeJN1UC9W4IS3sy6grfQDVJnNPITjggJAr2LnpnFX0FVsfJK8nFTwKCoZ1JRk9GZDMJvmyFYTKcuQJhpYnJy2f9KBoc+mnOr7nYHWX/PVJz26nnXkO8/FtWM4uwgB2XrZuwwne0CjGaKgP2L5COO+bXcFfZPR6+MbyxmUefYmIQSKDmzc7Cn7Dy7aI+6orvvVpZXbXGEfTWrOA4+xFq6wLk51u0kBfcXvlL22T5aiQTStpAHu8F/7eMuXP8jm1LbEU5XdGCSzpgTFXc6xCcUWdFelsMJJ8kHRY8Kq2VgMYgJF2NCAdTatlR5qAk33Cug+zErPHaRwrYgp0VqMk2jJsHaK7h1ll8Av5mb0JOfu9BaP62f+mAUg5QMy0+m+uUel357m1tVt9ayTZk0DC6n28uiKNaEuc0U5/TydwpmVchUeeAGhRuZAJGRW0erD/0Q+TXLL0rxydj3UfiUZ8bOmENYUIwaGcjSkWnvhGHKx3XL1zgyrJGc2PXC0FGVeoxRILTf+yBwZEUVrvm6DqbeRZuU7bHkug+7XJA1LHfaWhdv1meDIeM8w=

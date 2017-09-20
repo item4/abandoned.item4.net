@@ -1,0 +1,4 @@
+[flake8]
+exclude =
+    innocent/settings.py
+    innocent/settings.example.py
