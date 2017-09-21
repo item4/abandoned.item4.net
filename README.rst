@@ -31,8 +31,8 @@ Configuration
 -------------
 
 You need ``innocent/settings.py`` which is regular django config.
-You can see example file in same path.
-If you use example file, you must change some values like secret key.
+You can use ``base_settings.py`` file via import.
+But you must change some values like secret key.
 
 
 Database migration
