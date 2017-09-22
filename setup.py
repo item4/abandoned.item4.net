@@ -5,6 +5,9 @@ install_requires = {
     'django[argon2] >= 1.11.5',
     'django-timezone-field >= 2.0',
     'django-allauth >= 0.33.0',
+    # RESTful
+    'djangorestframework >= 3.6.4',
+    'django-rest-auth >= 0.9.1',
 }
 
 tests_require = {
