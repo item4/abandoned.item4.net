@@ -1,9 +1,9 @@
 from allauth.account.adapter import DefaultAccountAdapter
 
-from rest_auth.views import LoginView, LogoutView
-from rest_auth.registration.views import RegisterView, VerifyEmailView
-
 from django.http.response import JsonResponse
+
+from rest_auth.registration.views import RegisterView, VerifyEmailView
+from rest_auth.views import LoginView, LogoutView
 
 from .serializers import LoginSerializer, RegisterSerializer
 

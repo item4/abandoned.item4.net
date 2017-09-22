@@ -1,7 +1,7 @@
-from rest_auth.serializers import LoginSerializer as RALoginSerializer
 from rest_auth.registration.serializers import (
     RegisterSerializer as RARegisterSerializer
 )
+from rest_auth.serializers import LoginSerializer as RALoginSerializer
 
 
 class LoginSerializer(RALoginSerializer):
