@@ -1,0 +1,9 @@
+{% load account %}{% user_display user as user_display %}
+안녕하세요! innocent(item4.net)입니다!
+
+{{ user_display }} 계정의 회원가입을 위해 메일을 보내게 되었습니다. 인증 절차를 거쳐주셔야 회원가입이 완료됩니다.
+
+회원가입을 신청하신 것이 맞으시다면 {{ activate_url }} 에 방문해주세요.
+만약 본인이 가입한게 아니시라면 본 메일로 회신해주시면 조사 후 안내드리겠습니다.
+
+innocent(item4.net) 드림

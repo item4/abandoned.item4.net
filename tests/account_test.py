@@ -15,7 +15,7 @@ def test_register_fine(client, mailoutbox):
 
     ADDRESS = 'item4@example.com'
     PASSWORD = '$uper$escret$uper$escret$uper$escret'
-    SUBJECT = '[item4.net] Please Confirm Your E-mail Address'
+    SUBJECT = '[item4.net] innocent 회원 가입을 위해 E-mail 주소를 확인해주세요!'
     res = client.post('/auth/register/', json.dumps({
         'email': ADDRESS,
         'password1': PASSWORD,
