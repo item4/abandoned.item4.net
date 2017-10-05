@@ -5,15 +5,15 @@ from rest_auth.views import (
     LoginView,
     LogoutView,
     PasswordChangeView,
-    PasswordResetView,
     PasswordResetConfirmView,
+    PasswordResetView,
 )
 
 from .adapter import AccountAdapter
 from .serializers import (
     LoginSerializer,
+    PasswordResetSerializer,
     RegisterSerializer,
-    PasswordResetSerializer
 )
 
 
