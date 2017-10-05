@@ -16,4 +16,16 @@ urlpatterns = [
         views.Confirm.as_view(),
         name="account_confirm_email"  # override allauth default
     ),
+    url(
+        r'^password/reset/$',
+        views.PasswordReset.as_view(),
+    ),
+    url(
+        r'^password/reset/confirm/$',
+        views.PasswordResetConfirm.as_view(),
+    ),
+    url(
+        r'^password/change/$',
+        views.PasswordChange.as_view(),
+    ),
 ]
