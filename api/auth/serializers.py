@@ -6,6 +6,8 @@ from rest_auth.serializers import (
     PasswordResetSerializer as RAPasswordResetSerializer
 )
 
+from .fields import TimezoneField
+
 
 class LoginSerializer(RALoginSerializer):
     """Own serializer for login."""
@@ -22,6 +24,16 @@ class RegisterSerializer(RARegisterSerializer):
     # username param. It must not be blank and not be longer than 0.
     # WTF?!
     username = None
+    # END
+
+    tz = TimezoneField(required=True)
+
+    def get_cleaned_data(self):
+        return {
+            'email': self.validated_data.get('email', ''),
+            'password': self.validated_data.get('password1', ''),
+            'tz': self.validated_data.get('tz', ''),
+        }
 
 
 class PasswordResetSerializer(RAPasswordResetSerializer):

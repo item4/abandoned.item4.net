@@ -11,7 +11,7 @@ PASSWORD_RESET_URL_RE = re.compile('/auth/password/reset/(.+?)/(.+?)/')
 
 
 @pytest.mark.django_db()
-def test_register_fine(client, mailoutbox):
+def test_register_fine(client, mailoutbox, django_user_model):
     """Register user correctly."""
 
     ADDRESS = 'item4@example.com'
@@ -21,6 +21,7 @@ def test_register_fine(client, mailoutbox):
         'email': ADDRESS,
         'password1': PASSWORD,
         'password2': PASSWORD,
+        'tz': 'Asia/Tokyo',
     }), content_type='application/json')
     data = res.json()
     assert data['detail'] == "Verification e-mail sent."
@@ -53,6 +54,9 @@ def test_register_fine(client, mailoutbox):
     assert data['detail'] == 'ok'
     assert address.verified
 
+    user = django_user_model.objects.get(email=ADDRESS)
+    assert user.tz.zone == 'Asia/Tokyo'
+
 
 @pytest.mark.django_db()
 def test_register_no_fields(client):
@@ -64,6 +68,7 @@ def test_register_no_fields(client):
     assert data['email'] == ['This field is required.']
     assert data['password1'] == ['This field is required.']
     assert data['password2'] == ['This field is required.']
+    assert data['tz'] == ['This field is required.']
 
 
 @pytest.mark.django_db()
@@ -74,11 +79,13 @@ def test_register_empty_fields(client):
         'email': '',
         'password1': '',
         'password2': '',
+        'tz': '',
     }), content_type='application/json')
     data = res.json()
     assert data['email'] == ['This field may not be blank.']
     assert data['password1'] == ['This field may not be blank.']
     assert data['password2'] == ['This field may not be blank.']
+    assert data['tz'] == ['This field may not be blank.']
 
 
 @pytest.mark.django_db()
@@ -91,6 +98,7 @@ def test_register_invalid_email(client):
         'email': ADDRESS,
         'password1': PASSWORD,
         'password2': PASSWORD,
+        'tz': 'Asia/Tokyo',
     }), content_type='application/json')
     data = res.json()
     assert data['email'] == ['Enter a valid email address.']
@@ -106,6 +114,7 @@ def test_register_invalid_password(client):
         'email': ADDRESS,
         'password1': PASSWORD,
         'password2': PASSWORD,
+        'tz': 'Asia/Tokyo',
     }), content_type='application/json')
     data = res.json()
     assert data['password1'] == [
@@ -124,6 +133,7 @@ def test_register_different_password(client):
         'email': ADDRESS,
         'password1': '$uper$escret$uper$escret$uper$escret',  # used $
         'password2': 'supersescretsupersescretsupersescret',  # used s
+        'tz': 'Asia/Tokyo',
     }), content_type='application/json')
     data = res.json()
     assert data['non_field_errors'] == [
