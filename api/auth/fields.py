@@ -1,6 +1,6 @@
-from rest_framework import serializers
-
 import pytz
+
+from rest_framework import serializers
 
 
 class TimezoneField(serializers.Field):
