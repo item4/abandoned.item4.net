@@ -270,7 +270,7 @@ def test_password_reset_fine(client, django_user_model, mailoutbox):
 
 
 @pytest.mark.django_db()
-def test_password_change(client, django_user_model):
+def test_password_change_fine(client, django_user_model):
     """Password change"""
 
     ADDRESS = 'item4@example.com'
