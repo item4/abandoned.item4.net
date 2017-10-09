@@ -7,6 +7,7 @@ import pytest
 
 
 CONFIRM_URL_RE = re.compile('(/auth/confirm/.+?/)')
+PASSWORD_RESET_URL_RE = re.compile('/auth/password/reset/(.+?)/(.+?)/')
 
 
 @pytest.mark.django_db()
@@ -218,3 +219,41 @@ def test_logout(client):
                       content_type='application/json')
     data = res.json()
     assert data['detail'] == 'Successfully logged out.'
+
+
+@pytest.mark.django_db()
+def test_password_reset_fine(client, django_user_model, mailoutbox):
+    """Password reset"""
+
+    ADDRESS = 'item4@example.com'
+    OLD_PASSWORD = '$uper$escret$uper$escret$uper$escret'
+    NEW_PASSWORD = 'nEwpa$$wordnEwpa$$wordnEwpa$$word'
+    SUBJECT = 'innocent(item4.net) 비밀번호 리셋 요청'
+
+    user = django_user_model.objects.create_user(ADDRESS, OLD_PASSWORD)
+
+    res = client.post('/auth/password/reset/', {
+        'email': ADDRESS,
+    })
+    data = res.json()
+    assert data['detail'] == 'Password reset e-mail has been sent.'
+
+    mail = mailoutbox[0]
+
+    assert mail.subject == SUBJECT
+    assert list(mail.to) == [ADDRESS]
+
+    match = PASSWORD_RESET_URL_RE.search(mail.body)
+    assert match
+
+    res = client.post('/auth/password/reset/confirm/', {
+        'new_password1': NEW_PASSWORD,
+        'new_password2': NEW_PASSWORD,
+        'uid': match.group(1),
+        'token': match.group(2),
+    })
+    data = res.json()
+    assert data['detail'] == 'Password has been reset with the new password.'
+
+    user.refresh_from_db()
+    assert user.check_password(NEW_PASSWORD)
