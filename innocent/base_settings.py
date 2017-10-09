@@ -187,3 +187,8 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = '[item4.net] '
 ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_ADAPTER = 'api.auth.adapter.AccountAdapter'
+
+
+# django_rest_auth
+
+OLD_PASSWORD_FIELD_ENABLED = True

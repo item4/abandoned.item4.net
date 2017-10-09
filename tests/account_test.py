@@ -257,3 +257,26 @@ def test_password_reset_fine(client, django_user_model, mailoutbox):
 
     user.refresh_from_db()
     assert user.check_password(NEW_PASSWORD)
+
+
+@pytest.mark.django_db()
+def test_password_change(client, django_user_model):
+    """Password change"""
+
+    ADDRESS = 'item4@example.com'
+    OLD_PASSWORD = '$uper$escret$uper$escret$uper$escret'
+    NEW_PASSWORD = 'nEwpa$$wordnEwpa$$wordnEwpa$$word'
+
+    user = django_user_model.objects.create_user(ADDRESS, OLD_PASSWORD)
+    client.login(email=ADDRESS, password=OLD_PASSWORD)
+
+    res = client.post('/auth/password/change/', {
+        'old_password': OLD_PASSWORD,
+        'new_password1': NEW_PASSWORD,
+        'new_password2': NEW_PASSWORD,
+    })
+    data = res.json()
+    assert data['detail'] == 'New password has been saved.'
+
+    user.refresh_from_db()
+    assert user.check_password(NEW_PASSWORD)
