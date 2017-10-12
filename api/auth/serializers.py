@@ -6,6 +6,8 @@ from rest_auth.serializers import (
     PasswordResetSerializer as RAPasswordResetSerializer
 )
 
+from rest_framework import serializers
+
 from .fields import TimezoneField
 
 
@@ -26,12 +28,15 @@ class RegisterSerializer(RARegisterSerializer):
     username = None
     # END
 
+    name = serializers.CharField(required=True, max_length=25)
+
     tz = TimezoneField(required=True)
 
     def get_cleaned_data(self):
         return {
             'email': self.validated_data.get('email', ''),
             'password': self.validated_data.get('password1', ''),
+            'name': self.validated_data.get('name', ''),
             'tz': self.validated_data.get('tz', ''),
         }
 

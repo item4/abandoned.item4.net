@@ -22,6 +22,7 @@ class AccountAdapter(DefaultAccountAdapter):
         """
 
         data = form.cleaned_data
+        user.name = data['name']
         user.email = data['email']
         user.tz = data['tz']
 

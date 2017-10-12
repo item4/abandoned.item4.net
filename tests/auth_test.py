@@ -14,10 +14,12 @@ PASSWORD_RESET_URL_RE = re.compile('/auth/password/reset/(.+?)/(.+?)/')
 def test_register_fine(client, mailoutbox, django_user_model):
     """Register user correctly."""
 
+    NAME = 'item4'
     ADDRESS = 'item4@example.com'
     PASSWORD = '$uper$escret$uper$escret$uper$escret'
     SUBJECT = '[item4.net] innocent 회원 가입을 위해 E-mail 주소를 확인해주세요!'
     res = client.post('/auth/register/', json.dumps({
+        'name': NAME,
         'email': ADDRESS,
         'password1': PASSWORD,
         'password2': PASSWORD,
@@ -56,6 +58,7 @@ def test_register_fine(client, mailoutbox, django_user_model):
 
     user = django_user_model.objects.get(email=ADDRESS)
     assert user.tz.zone == 'Asia/Tokyo'
+    assert user.name == NAME
 
 
 @pytest.mark.django_db()
@@ -68,6 +71,7 @@ def test_register_no_fields(client):
     assert data['email'] == ['This field is required.']
     assert data['password1'] == ['This field is required.']
     assert data['password2'] == ['This field is required.']
+    assert data['name'] == ['This field is required.']
     assert data['tz'] == ['This field is required.']
 
 
@@ -76,6 +80,7 @@ def test_register_empty_fields(client):
     """Register with empty values"""
 
     res = client.post('/auth/register/', json.dumps({
+        'name': '',
         'email': '',
         'password1': '',
         'password2': '',
@@ -85,6 +90,7 @@ def test_register_empty_fields(client):
     assert data['email'] == ['This field may not be blank.']
     assert data['password1'] == ['This field may not be blank.']
     assert data['password2'] == ['This field may not be blank.']
+    assert data['name'] == ['This field may not be blank.']
     assert data['tz'] == ['This field may not be blank.']
 
 
@@ -92,9 +98,11 @@ def test_register_empty_fields(client):
 def test_register_invalid_email(client):
     """Register with invalid email"""
 
+    NAME = 'item4'
     ADDRESS = 'invalid#example.com'
     PASSWORD = '$uper$escret$uper$escret$uper$escret'
     res = client.post('/auth/register/', json.dumps({
+        'name': NAME,
         'email': ADDRESS,
         'password1': PASSWORD,
         'password2': PASSWORD,
@@ -108,9 +116,11 @@ def test_register_invalid_email(client):
 def test_register_invalid_password(client):
     """Register with invalid password"""
 
+    NAME = 'item4'
     ADDRESS = 'item4@example.com'
     PASSWORD = '1234'
     res = client.post('/auth/register/', json.dumps({
+        'name': NAME,
         'email': ADDRESS,
         'password1': PASSWORD,
         'password2': PASSWORD,
@@ -128,8 +138,10 @@ def test_register_invalid_password(client):
 def test_register_different_password(client):
     """Register with different password 1 and 2"""
 
+    NAME = 'item4'
     ADDRESS = 'item4@example.com'
     res = client.post('/auth/register/', json.dumps({
+        'name': NAME,
         'email': ADDRESS,
         'password1': '$uper$escret$uper$escret$uper$escret',  # used $
         'password2': 'supersescretsupersescretsupersescret',  # used s
@@ -138,6 +150,26 @@ def test_register_different_password(client):
     data = res.json()
     assert data['non_field_errors'] == [
         "The two password fields didn't match.",
+    ]
+
+
+@pytest.mark.django_db()
+def test_register_long_name(client):
+    """Register with too long name"""
+
+    NAME = 'item' + '4'*100
+    ADDRESS = 'item4@example.com'
+    PASSWORD = '$uper$escret$uper$escret$uper$escret'
+    res = client.post('/auth/register/', json.dumps({
+        'name': NAME,
+        'email': ADDRESS,
+        'password1': PASSWORD,
+        'password2': PASSWORD,
+        'tz': 'Asia/Tokyo',
+    }), content_type='application/json')
+    data = res.json()
+    assert data['name'] == [
+        'Ensure this field has no more than 25 characters.',
     ]
 
 
