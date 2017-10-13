@@ -46,7 +46,7 @@ def test_users_retrieve(client, django_user_model):
     assert data['tz'] == 'Asia/Tokyo'
 
     res = client.get('/users/me/')
-    assert res.status_code == 401
+    assert res.status_code == 403
 
     client.login(email='item2@example.com', password=PASSWORD)
 
@@ -100,7 +100,7 @@ def test_users_partial_update(django_user_model, factory):
     res = view(request)
     assert res.status_code == 403
 
-    request = factory.patch('/users/2/', format='json')
+    request = factory.patch('/users/2/')
     force_authenticate(request, user=user2)
     res = view(request, pk=2)
     data = res.data
@@ -115,7 +115,7 @@ def test_users_partial_update(django_user_model, factory):
     request = factory.patch('/users/2/', {
         'name': '',
         'tz': '',
-    }, format='json')
+    })
     force_authenticate(request, user=user2)
     res = view(request, pk=2)
     data = res.data
@@ -130,7 +130,7 @@ def test_users_partial_update(django_user_model, factory):
     request = factory.patch('/users/2/', {
         'name': '이소룡',
         'tz': 'Asia/Seoul',
-    }, format='json')
+    })
     force_authenticate(request, user=user2)
     res = view(request, pk=2)
     data = res.data
@@ -143,7 +143,7 @@ def test_users_partial_update(django_user_model, factory):
     request = factory.patch('/users/me/', {
         'name': '키리가야 카즈토',
         'tz': 'Asia/Tokyo',
-    }, format='json')
+    })
     force_authenticate(request, user=user2)
     res = view(request, pk='me')
     data = res.data

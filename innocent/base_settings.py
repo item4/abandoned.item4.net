@@ -169,6 +169,13 @@ EMAIL_HOST_USER = 'secret'
 EMAIL_HOST_PASSWORD = 'supersecret'
 
 
+# Django-rest-framework
+
+REST_FRAMEWORK = {
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+}
+
+
 # Django Allauth
 
 SITE_ID = 1
