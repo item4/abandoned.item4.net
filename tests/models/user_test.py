@@ -32,7 +32,7 @@ def test_create_user_fine(django_user_model):
     assert user.last_login is None
     assert user.is_active
     assert not user.is_banned
-    assert not user.is_admin
+    assert not user.is_superuser
     assert user.date_joined.year == today.year
     assert user.date_joined.month == today.month
     assert user.date_joined.day == today.day
@@ -51,7 +51,7 @@ def test_create_superuser(django_user_model):
     assert user.last_login is None
     assert user.is_active
     assert not user.is_banned
-    assert user.is_admin
+    assert user.is_superuser
     assert user.date_joined.year == today.year
     assert user.date_joined.month == today.month
     assert user.date_joined.day == today.day

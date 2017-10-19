@@ -1,4 +1,8 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin
+)
 from django.db import models
 from timezone_field import TimeZoneField
 
@@ -20,13 +24,13 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password):
         user = self.create_user(email, password)
-        user.is_admin = True
+        user.is_superuser = True
 
         user.save(using=self._db)
         return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         verbose_name='email address to login',
         max_length=255,
@@ -47,7 +51,6 @@ class User(AbstractBaseUser):
 
     is_banned = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
     date_joined = models.DateTimeField(
         verbose_name='회원가입일',
         auto_now_add=True,
